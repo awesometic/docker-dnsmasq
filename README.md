@@ -2,12 +2,20 @@
 
 dnsmasq in a docker container, configurable via a [simple web UI](https://github.com/jpillora/webproc)
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jpillora/dnsmasq.svg)][dockerhub]
-[![Image Size](https://images.microbadger.com/badges/image/jpillora/dnsmasq.svg)][dockerhub]
+[![Docker Pulls](https://img.shields.io/docker/pulls/awesometic/dnsmasq.svg)][dockerhub]
+[![Image Size](https://images.microbadger.com/badges/image/awesometic/dnsmasq.svg)][dockerhub]
+
+### Has preset for Odroid H2
+
+This image has a default dnsmasq.conf file for Odroid H2 working with the other PXE server.
+
+Working confirmed with [linuxserver/netbootxyz](https://github.com/linuxserver/docker-netbootxyz).
+
+If you want to build your own PXE server image, you have to make sure that that has UEFI bootloader.
 
 ### Usage
 
-1. Create a [`/opt/dnsmasq.conf`](http://oss.segetech.com/intra/srv/dnsmasq.conf) file on the Docker host
+1. If you want to use your dnsmasq configuration, create a [`/opt/dnsmasq.conf`](http://oss.segetech.com/intra/srv/dnsmasq.conf) file on the Docker host
 
    ```ini
    #dnsmasq config, for a complete example, see:
@@ -26,37 +34,23 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
    address=/myhost.company/10.0.0.2
    ```
 
-1. Run the container
+2. Run the container
 
-   ```
-   $ docker run \
-   	--name dnsmasq \
-   	-d \
-   	-p 53:53/udp \
-   	-p 5380:8080 \
-   	-v /opt/dnsmasq.conf:/etc/dnsmasq.conf \
-   	--log-opt "max-size=100m" \
-   	-e "HTTP_USER=foo" \
-   	-e "HTTP_PASS=bar" \
-   	--restart always \
-   	jpillora/dnsmasq
+   ```bash
+   docker run -d \
+      --name dnsmasq \
+      -v /opt/dnsmasq.conf:/etc/dnsmasq.conf \
+      --log-opt "max-size=100m" \
+      -e "HTTP_USER=foo" \
+      -e "HTTP_PASS=bar" \
+      --net host \
+      --restart always \
+      awesometic/dnsmasq
    ```
 
-1. Visit `http://<docker-host>:5380`, authenticate with `foo/bar` and you should see
+3. Visit `http://<docker-host>:8080`, authenticate with `foo/bar` and you should see
 
    <img width="833" alt="screen shot 2017-10-15 at 1 41 21 am" src="https://user-images.githubusercontent.com/633843/31580966-baacba62-b1a9-11e7-8439-ca1ddfe828dd.png">
-
-1. Test it out with
-
-   ```
-   $ host myhost.company <docker-host>
-   Using domain server:
-   Name: <docker-host>
-   Address: <docker-host>#53
-   Aliases:
-
-   myhost.company has address 10.0.0.2
-   ```
 
 #### MIT License
 
