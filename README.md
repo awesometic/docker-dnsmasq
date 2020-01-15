@@ -5,11 +5,11 @@ dnsmasq in a docker container, configurable via a [simple web UI](https://github
 [![Docker Pulls](https://img.shields.io/docker/pulls/awesometic/dnsmasq.svg)][dockerhub]
 [![Image Size](https://images.microbadger.com/badges/image/awesometic/dnsmasq.svg)][dockerhub]
 
-### Has preset for Odroid H2
+### Has preset for EFI systems
 
-This image has a default dnsmasq.conf file for Odroid H2 working with the other PXE server.
+This image has a default dnsmasq.conf file for EFI systems that only works with when the other PXE server exists.
 
-Working confirmed with [linuxserver/netbootxyz](https://github.com/linuxserver/docker-netbootxyz).
+The PXE server working confirmed with is [linuxserver/netbootxyz](https://github.com/linuxserver/docker-netbootxyz).
 
 If you want to build your own PXE server image, you have to make sure that that has UEFI bootloader.
 
