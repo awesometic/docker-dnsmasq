@@ -20,18 +20,36 @@ If you want to build your own PXE server image, you have to make sure that that 
    ```ini
    #dnsmasq config, for a complete example, see:
    #  http://oss.segetech.com/intra/srv/dnsmasq.conf
+
    #log all dns queries
    log-queries
+
    #dont use hosts nameservers
    no-resolv
-   #use cloudflare as default nameservers, prefer 1^4
-   server=1.0.0.1
-   server=1.1.1.1
-   strict-order
-   #serve all .company queries using a specific nameserver
-   server=/company/10.0.0.1
-   #explicitly define host-ip mappings
-   address=/myhost.company/10.0.0.2
+
+   # Enable DHCP logging
+   log-dhcp
+
+   # Disable DNS server
+   port=0
+
+   # Disable re-use of the DHCP servername and filename fields as extra
+   # option space. That's to avoid confusing some old or broken DHCP clients.
+   dhcp-no-override
+
+   # Run as root user
+   user=root
+
+   # Respond to PXE requests for the specified network;
+   # run as DHCP proxy
+   # Change the IP address to your private LAN IP
+   dhcp-range=192.168.30.2,192.168.30.254,255.255.255.0
+   # Change the IP address to the PXE server
+   dhcp-boot=tag:efi64,netboot.xyz.efi,,192.168.30.9
+
+   dhcp-match=set:efi64,60,PXEClient:Arch:00007
+   dhcp-match=set:efi64,60,PXEClient:Arch:00008
+   dhcp-match=set:efi64,60,PXEClient:Arch:00009
    ```
 
 2. Run the container
